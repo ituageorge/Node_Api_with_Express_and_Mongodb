@@ -71,7 +71,7 @@ const BootcampSchema = new mongoose.Schema({
        ]
     },
 
-    averageRaging: {
+    averageRating: {
         type: Number,
         min: [1, 'Rating must be at least 1'],
         max: [10, 'Rating must not be more than 10'], 
