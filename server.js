@@ -10,7 +10,7 @@ const connectDB = require('./config/db')
 dotenv.config({ path: './config/config.env'});
 
 // connect to database
-connectDB(process.env.MONGO_URI);
+connectDB(process.env.DB_URL);
 
 //Route files
 const bootcamps = require("./routes/bootcamps")
