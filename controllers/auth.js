@@ -17,11 +17,7 @@ exports.register = asyncHandler(async (req, res, next) => {
       role
   }) 
 
-  //Create Token
-  const token = user.getSignedJwtToken();
-
-
-  res.status(200).json({ success: true, token });
+  sendTokenResponse(user, 200, res);
 })
 
 
@@ -69,10 +65,23 @@ const sendTokenResponse = (user, statusCode, res) => {
     }
 
    res
-   .status(statusCode)
-   .cookie('token', token, options)
-   .json({
+    .status(statusCode)
+    .cookie('token', token, options)
+    .json({
      success: true,
      token
    })
 }
+
+//@desc Get current logged in user
+//@route POST /api/v1/auth/me
+//@access Private
+
+exports.getMe = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+    res.status(200).json({
+      success: true,
+      data: user 
+    })
+})
