@@ -5,7 +5,7 @@ const geocoder = require('../utils/geocoder')
 const Bootcamp = require('../models/Bootcamp')
 
 //description   Get all bootcamps
-//@route        Get /api/v1/bootcamps
+//@route        Get /api/v1/bootcamps 
 //@access       Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
         
@@ -29,8 +29,17 @@ exports.getBootcamp = asyncHandler (async (req, res, next) => {
 //@route        Post /api/v1/bootcamps
 //@access       Private
 exports.createBootcamp = asyncHandler( async (req, res, next) => {
+    // AAdd user to req.body
+    req.body.user = req.user.id;
+
+    //check for published bootcamp
+    const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id});
+
+    // If the user is not in admin , they can only add one bootcamp
+    if(publishedBootcamp && req.user.role !== 'admin') {
+        return next(new ErrorResponse(`The user with ID ${req.user.id} has already published a bootcamp`, 400));
+    }
    
-    console.log('req.body', req.body);
     const bootcamp = await Bootcamp.create(req.body);
     console.log('bootcamp', bootcamp);
     res.status(201).json({
